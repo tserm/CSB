@@ -60,7 +60,7 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-#fdeclare a function to serach filtered gene names form the master list on the uniprot website using a specific keyword  
+#declare a function to serach filtered gene names form the master list on the uniprot website using a specific keyword  
 
 def search_uniprot(genes, keyword):
         keyword = keyword.lower()
