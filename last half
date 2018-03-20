@@ -1,5 +1,60 @@
 
+change an excel sheet to a csv file
+import xlrd
+import csv
 
+def csv_from_excel(workbook):
+    wb = xlrd.open_workbook(workbook)
+    sh = wb.sheet_by_name('Sheet1')
+    with open('MS.csv', 'w') as MS:
+        wr = csv.writer(MS, quoting=csv.QUOTE_ALL)
+
+        for rownum in range(sh.nrows):
+            wr.writerow(sh.row_values(rownum))
+
+    MS.close()
+
+csv_from_excel("MS.xlsx")
+
+#read csv file as a dictionary
+#write the csv file as dictionary with gene names as keys and 'unique hits' as values, removing the header
+import csv
+with open ("MS.csv", mode= 'r') as infile:
+    reader = csv.reader(infile)
+    next(reader,None)
+    with open("MS_new.csv", mode= 'w') as outfile: 
+        writer = csv.writer(outfile)
+        hitnumbers= {rows[3]:rows[0] for rows in reader}
+
+#convert values in dictionary from strings to floats
+hitnumbers_ints= dict((k,float(v)) for k,v in hitnumbers.items())
+
+#convert the dictionary into a list containing all unique hit values >1
+hits_list=[]
+for key, value in hitnumbers_ints.items():
+    if value > 1:
+        hits_list.append(key)
+        
+#read the csv file as a dictionary
+#write the csv file as dictionary with gene names as keys and molecular weights as values, removing the header
+with open ("MS.csv", mode= 'r') as infile:
+    reader = csv.reader(infile)
+    next(reader,None)
+    with open("MS_new.csv", mode= 'w') as outfile: 
+        writer = csv.writer(outfile)
+        MW= {rows[3]:rows[4] for rows in reader}
+        
+#convert values from strings to floats
+MW_float= dict((k,float(v)) for k,v in MW.items())
+
+#convert the dictionary into a list containing all gene names with molecular weights in the range of 50-70kDa
+MW_list=[]
+for key, value in MW_float.items():
+    if 50.0 < value < 70.0:
+        MW_list.append(key)
+
+#concatenate gene names with >1 unique hits and molecular weights in the range of 50-70 into a master list
+sig_hits= (list(set(hits_list) & (set(MW_list))))
 
 import sys
 import requests
